@@ -21,11 +21,13 @@ let currentQuery = "";
 let currentPage = 1;
 let totalHits = 0;
 
+
 function handleEndOfResults() {
   hideLoadMoreButton();
   iziToast.info({
-    icon: 'fa-solid fa-ban',
-    iconColor: '#2222',
+    icon: "fa-solid fa-ban",
+    iconColor: "#2222",
+    backgroundColor: "#EF4040",
     message: "We're sorry, but you've reached the end of search results.",
     timeout: 3000,
     position: "topRight",
@@ -35,6 +37,7 @@ function handleEndOfResults() {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const query = input.value.trim();
+
   if (!query) {
     iziToast.error({
       icon: "fa-solid fa-ban",
@@ -46,6 +49,7 @@ form.addEventListener("submit", async (event) => {
     });
     return;
   }
+
 
   if (query !== currentQuery) {
     currentQuery = query;
@@ -59,10 +63,11 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const data = await getImagesByQuery(currentQuery, currentPage);
+
     if (!data.hits?.length) {
       iziToast.info({
-        icon: 'fa-solid fa-ban',
-        iconColor: '#2222',
+        icon: "fa-solid fa-ban",
+        iconColor: "#2222",
         message: "Sorry, there are no images matching your search query.",
         backgroundColor: "#EF4040",
         timeout: 3000,
@@ -74,20 +79,19 @@ form.addEventListener("submit", async (event) => {
 
     createGallery(data.hits);
 
-    totalHits = data.totalHits || 0;
+   totalHits = data.totalHits || totalHits;
     const pagesCount = Math.ceil(totalHits / 15);
 
-    currentPage += 1;
-
-    if (currentPage > pagesCount) {
-      handleEndOfResults();
-    } else {
+    if (currentPage < pagesCount) {
       showLoadMoreButton();
+    } else {
+      handleEndOfResults();
     }
+
   } catch (error) {
     iziToast.error({
-      icon: 'fa-solid fa-ban',
-      iconColor: '#2222',
+      icon: "fa-solid fa-ban",
+      iconColor: "#2222",
       message: "Something went wrong. Please try again!",
       backgroundColor: "#EF4040",
       timeout: 3000,
@@ -99,13 +103,13 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
+
 loadMoreBtn.addEventListener("click", async () => {
   try {
     showLoader();
 
-    currentPage += 1; 
-
-    const data = await getImagesByQuery(currentQuery, currentPage);
+    const nextPage = currentPage + 1;
+    const data = await getImagesByQuery(currentQuery, nextPage);
 
     if (!data.hits?.length) {
       handleEndOfResults();
@@ -113,7 +117,8 @@ loadMoreBtn.addEventListener("click", async () => {
     }
 
     createGallery(data.hits);
-
+    currentPage = nextPage; 
+ totalHits = data.totalHits || totalHits;
     const firstCard = gallery.querySelector(".gallery-item");
     if (firstCard) {
       const { height: cardHeight } = firstCard.getBoundingClientRect();
@@ -124,10 +129,11 @@ loadMoreBtn.addEventListener("click", async () => {
     if (currentPage >= pagesCount) {
       handleEndOfResults();
     }
+
   } catch (error) {
     iziToast.error({
-      icon: 'fa-solid fa-ban',
-      iconColor: '#2222',
+      icon: "fa-solid fa-ban",
+      iconColor: "#2222",
       message: "Something went wrong. Please try again!",
       backgroundColor: "#EF4040",
       timeout: 3000,

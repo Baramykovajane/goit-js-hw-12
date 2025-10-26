@@ -44,12 +44,12 @@ loader.classList.remove('active');
 
 
 export function showLoadMoreButton() {
-loadMoreBtn.classList.remove('hidden');
+loadMoreBtn.style.display = "block";
 }
 
 
 export function hideLoadMoreButton() {
-loadMoreBtn.classList.add('hidden');
+loadMoreBtn.style.display = "none";
 }
 
 
