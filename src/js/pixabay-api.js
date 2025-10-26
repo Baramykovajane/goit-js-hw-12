@@ -5,15 +5,16 @@ const PER_PAGE = 15;
 export async function getImagesByQuery(query, page = 1) {
   try {
     const response = await axios.get(BASE_URL, {
-       params: {
+      params: {
         key: API_KEY,
         q: query,
         image_type: "photo",
         orientation: "horizontal",
         safesearch: true,
+        page,          
+        per_page: 15,  
       },
     });
-
 
     return response.data;
   } catch (error) {
