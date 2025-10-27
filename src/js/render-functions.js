@@ -6,7 +6,6 @@ const loader = document.querySelector(".loader");
 const loadMoreBtn = document.getElementById('load-more');
 const lightbox = new SimpleLightbox(".gallery a", { captionsData: "alt", captionDelay: 250 });
 
-hideLoadMoreButton(); 
 
 export function createGallery(images) {
   const markup = images.map(
@@ -46,11 +45,13 @@ loader.classList.remove('active');
 
 
 export function showLoadMoreButton() {
+loadMoreBtn.classList.remove("hidden");
 loadMoreBtn.style.display = "block";
 }
 
 
 export function hideLoadMoreButton() {
+loadMoreBtn.classList.add("hidden");
 loadMoreBtn.style.display = "none";
 }
 

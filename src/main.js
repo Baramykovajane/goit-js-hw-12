@@ -20,7 +20,7 @@ const loadMoreBtn = getLoadMoreButton();
 let currentQuery = "";
 let currentPage = 1;
 let totalHits = 0;
-
+hideLoadMoreButton();
 
 function handleEndOfResults() {
   hideLoadMoreButton();
