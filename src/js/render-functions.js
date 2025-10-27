@@ -6,6 +6,8 @@ const loader = document.querySelector(".loader");
 const loadMoreBtn = document.getElementById('load-more');
 const lightbox = new SimpleLightbox(".gallery a", { captionsData: "alt", captionDelay: 250 });
 
+hideLoadMoreButton(); 
+
 export function createGallery(images) {
   const markup = images.map(
     ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `

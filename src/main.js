@@ -41,7 +41,7 @@ form.addEventListener("submit", async (event) => {
   if (!query) {
     iziToast.error({
       icon: "fa-solid fa-ban",
-      iconColor: "#2222",
+      iconColor: "#222",
       message: "Please enter a search term!",
       backgroundColor: "#EF4040",
       timeout: 3000,
@@ -49,7 +49,6 @@ form.addEventListener("submit", async (event) => {
     });
     return;
   }
-
 
   if (query !== currentQuery) {
     currentQuery = query;
@@ -104,43 +103,41 @@ form.addEventListener("submit", async (event) => {
 });
 
 
-loadMoreBtn.addEventListener("click", async () => {
-  try {
-    showLoader();
+ loadMoreBtn.addEventListener("click", async () => {
+   try {
+     showLoader();
 
-    const nextPage = currentPage + 1;
-    const data = await getImagesByQuery(currentQuery, nextPage);
+     const nextPage = currentPage + 1;
+     const data = await getImagesByQuery(currentQuery, nextPage);
 
-    if (!data.hits?.length) {
-      handleEndOfResults();
-      return;
-    }
+     if (!data.hits?.length) {
+       handleEndOfResults();
+       return;
+     }
+     createGallery(data.hits);
+     currentPage = nextPage; 
+  totalHits = data.totalHits || totalHits;
+     const firstCard = gallery.querySelector(".gallery-item");
+     if (firstCard) {
+       const { height: cardHeight } = firstCard.getBoundingClientRect();
+       window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
+     }
+     const pagesCount = Math.ceil(totalHits / 15);
+     if (currentPage >= pagesCount) {
+       handleEndOfResults();
+     }
 
-    createGallery(data.hits);
-    currentPage = nextPage; 
- totalHits = data.totalHits || totalHits;
-    const firstCard = gallery.querySelector(".gallery-item");
-    if (firstCard) {
-      const { height: cardHeight } = firstCard.getBoundingClientRect();
-      window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
-    }
-
-    const pagesCount = Math.ceil(totalHits / 15);
-    if (currentPage >= pagesCount) {
-      handleEndOfResults();
-    }
-
-  } catch (error) {
-    iziToast.error({
-      icon: "fa-solid fa-ban",
-      iconColor: "#2222",
-      message: "Something went wrong. Please try again!",
-      backgroundColor: "#EF4040",
-      timeout: 3000,
-      position: "topRight",
-    });
-    console.error(error);
-  } finally {
-    hideLoader();
-  }
-});
+   } catch (error) {
+     iziToast.error({
+       icon: "fa-solid fa-ban",
+       iconColor: "#2222",
+       message: "Something went wrong. Please try again!",
+       backgroundColor: "#EF4040",
+       timeout: 3000,
+       position: "topRight",
+     });
+     console.error(error);
+   } finally {
+     hideLoader();
+   }
+ });
